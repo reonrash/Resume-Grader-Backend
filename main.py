@@ -4,6 +4,7 @@ import json
 
 import uvicorn
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -17,7 +18,15 @@ load_dotenv()
 # Configure Gemini API key from environment variable
 genai.configure(api_key=os.environ.get("GOOGLE_API_KEY"))
 
+
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Adjust this to your frontend domain in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def extract_text_from_pdf(file: UploadFile) -> str:
